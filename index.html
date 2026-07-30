@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Marcella &amp; Ricardo | Jantar de Noivado</title>
+  <meta name="description" content="Confirme sua presença no jantar de noivado de Marcella e Ricardo — 19 de setembro de 2026, às 18h.">
+  <meta name="theme-color" content="#610018">
+
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/favicon.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Marcella & Ricardo | Jantar de Noivado">
+  <meta property="og:description" content="Confirme sua presença no jantar de noivado de Marcella e Ricardo — 19 de setembro de 2026, às 18h.">
+  <meta property="og:image" content="assets/compartilhamento.jpg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Marcella & Ricardo | Jantar de Noivado">
+  <meta name="twitter:description" content="Confirme sua presença no jantar de noivado de Marcella e Ricardo — 19 de setembro de 2026, às 18h.">
+  <meta name="twitter:image" content="assets/compartilhamento.jpg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Jost:wght@300;400;500&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"></noscript>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="loading" class="loading-overlay" aria-hidden="true">
+    <div class="spinner" role="status" aria-label="Carregando"></div>
+  </div>
+
+  <div id="toast-container" aria-live="polite"></div>
+
+  <main class="app">
+
+    <div class="progress-bar" id="progress-bar" aria-hidden="true">
+      <span class="progress-step" data-step="1"></span>
+      <span class="progress-step" data-step="2"></span>
+      <span class="progress-step" data-step="3"></span>
+      <span class="progress-step" data-step="4"></span>
+    </div>
+
+    <!-- ===================== TELA 01 — CÓDIGO ===================== -->
+    <section class="tela tela-ativa" id="tela-1" data-tela="1">
+      <div class="card card-hero">
+        <div class="logo-space">
+          <img src="assets/logo-patinhos.png" alt="Marcella e Ricardo" class="logo" onerror="this.style.display='none'">
+        </div>
+
+        <h1 class="titulo-nomes">Marcella &amp; Ricardo</h1>
+        <p class="subtitulo" id="nome-evento">Jantar de Noivado</p>
+        <p class="frase-decorativa">Um capítulo muito especial das nossas histórias</p>
+
+        <div class="info-evento">
+          <p class="info-linha"><span class="info-icone" aria-hidden="true">📅</span> <span id="data-evento">19 de setembro de 2026</span></p>
+          <p class="info-linha"><span class="info-icone" aria-hidden="true">🕕</span> <span id="horario-evento">18h</span></p>
+          <p class="info-linha">
+            <span class="info-icone" aria-hidden="true">📍</span>
+            <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" class="link-endereco" id="link-endereco">Ver endereço e orientações</a>
+          </p>
+          <p class="info-linha info-prazo"><span class="info-icone" aria-hidden="true">✅</span> <span id="texto-prazo">Confirme sua presença até 05 de setembro de 2026</span></p>
+        </div>
+
+        <a
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          id="btn-site-noivos"
+          class="botao botao-secundario"
+          hidden
+        >Acessar o site dos noivos</a>
+
+        <p class="texto-convite">
+          Estamos muito felizes em compartilhar este momento com você.
+          Será uma alegria celebrar essa nova etapa ao lado das pessoas que fazem parte da nossa história.
+          Esperamos você para uma noite especial, repleta de carinho, boa conversa e boas memórias.
+        </p>
+        <p class="texto-convite">Para confirmar sua presença, informe abaixo o código recebido em seu convite.</p>
+
+        <form id="form-codigo" novalidate>
+          <label for="input-codigo" class="campo-label">Código do convite</label>
+          <input
+            type="text"
+            id="input-codigo"
+            name="codigo"
+            class="campo-input"
+            placeholder="MR4827"
+            maxlength="12"
+            autocomplete="off"
+            autocapitalize="characters"
+            aria-describedby="erro-codigo"
+            required
+          >
+          <p id="erro-codigo" class="mensagem-erro" role="alert" aria-live="assertive"></p>
+
+          <button type="submit" id="btn-confirmar-codigo" class="botao botao-primario">
+            Confirmar presença
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================== TELA 02 — CONVIDADOS ===================== -->
+    <section class="tela" id="tela-2" data-tela="2">
+      <div class="card">
+        <h2 class="titulo-tela">Quem vai estar com a gente?</h2>
+        <p class="subtitulo-tela">Confirme a presença de cada convidado do seu convite.</p>
+
+        <p id="aviso-edicao" class="aviso-edicao" hidden>
+          Você já respondeu ao RSVP. Caso deseje alterar sua confirmação ou atualizar alguma informação, basta editar os campos abaixo e salvar novamente.
+        </p>
+
+        <form id="form-convidados">
+          <div id="lista-convidados" class="lista-convidados"></div>
+          <p id="erro-convidados" class="mensagem-erro" role="alert" aria-live="assertive"></p>
+
+          <div class="acoes-tela">
+            <button type="button" class="botao botao-secundario" data-voltar="1">Voltar</button>
+            <button type="submit" id="btn-avancar-convidados" class="botao botao-primario">Continuar</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================== TELA 03 — RESTRIÇÃO E MENSAGEM ===================== -->
+    <section class="tela" id="tela-3" data-tela="3">
+      <div class="card">
+        <form id="form-detalhes">
+
+          <div id="bloco-restricao" class="bloco-pergunta" hidden>
+            <h2 class="titulo-tela">Só mais um detalhe</h2>
+            <fieldset class="fieldset-reset">
+              <legend class="pergunta">Algum convidado possui restrição alimentar?</legend>
+
+              <div class="opcoes-radio">
+                <label class="radio-item">
+                  <input type="radio" name="temRestricao" value="nao" checked>
+                  <span class="radio-visual"></span>
+                  <span>Não</span>
+                </label>
+                <label class="radio-item">
+                  <input type="radio" name="temRestricao" value="sim">
+                  <span class="radio-visual"></span>
+                  <span>Sim</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div id="bloco-restricao-texto" hidden>
+              <label for="input-restricao" class="campo-label">Conte pra gente</label>
+              <textarea id="input-restricao" class="campo-textarea" rows="3" placeholder="Ex: vegetariano, alergia a frutos do mar..."></textarea>
+            </div>
+          </div>
+
+          <div class="bloco-pergunta">
+            <h2 class="titulo-tela titulo-tela-secundario">Mensagem para os noivos</h2>
+            <p class="pergunta pergunta-opcional">(opcional)</p>
+            <textarea id="input-mensagem" class="campo-textarea" rows="4" placeholder="Deixe um recado para Marcella e Ricardo..."></textarea>
+          </div>
+
+          <div class="acoes-tela">
+            <button type="button" class="botao botao-secundario" data-voltar="2">Voltar</button>
+            <button type="submit" id="btn-enviar" class="botao botao-primario">Enviar confirmação</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================== TELA 04 — AGRADECIMENTO / AUSÊNCIA ===================== -->
+    <section class="tela" id="tela-4" data-tela="4">
+      <div class="card card-final">
+        <div class="icone-final" aria-hidden="true">💌</div>
+        <h2 class="titulo-final" id="titulo-final"></h2>
+        <p class="texto-final" id="texto-final"></p>
+        <p class="assinatura-final">Com carinho,<br>Marcella &amp; Ricardo</p>
+
+        <button type="button" id="btn-voltar-inicio" class="botao botao-secundario botao-voltar-inicio">
+          Voltar ao início
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Painel Administrativo | Jantar de Noivado</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#610018">
+
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <div id="loading" class="loading-overlay" aria-hidden="true">
+    <div class="spinner" role="status" aria-label="Carregando"></div>
+  </div>
+
+  <div id="toast-container" aria-live="polite"></div>
+
+  <!-- ===================== LOGIN ===================== -->
+  <main class="admin-login" id="tela-login">
+    <div class="card card-login">
+      <h1 class="titulo-admin">Painel Administrativo</h1>
+      <p class="subtitulo-admin">Jantar de Noivado — Marcella &amp; Ricardo</p>
+
+      <form id="form-login" novalidate>
+        <label for="input-usuario" class="campo-label">Usuário</label>
+        <input
+          type="text"
+          id="input-usuario"
+          class="campo-input campo-input-admin"
+          autocomplete="username"
+          aria-describedby="erro-login"
+          required
+        >
+
+        <label for="input-senha" class="campo-label">Senha</label>
+        <input
+          type="password"
+          id="input-senha"
+          class="campo-input campo-input-admin"
+          autocomplete="current-password"
+          aria-describedby="erro-login"
+          required
+        >
+
+        <p id="erro-login" class="mensagem-erro" role="alert" aria-live="assertive"></p>
+
+        <button type="submit" id="btn-entrar" class="botao botao-primario">Entrar</button>
+      </form>
+    </div>
+  </main>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <main class="admin-dashboard" id="tela-dashboard" hidden>
+    <header class="admin-header">
+      <div>
+        <h1 class="titulo-admin titulo-admin-dashboard">Painel Administrativo</h1>
+        <p class="subtitulo-admin">Jantar de Noivado — Marcella &amp; Ricardo</p>
+      </div>
+      <div class="admin-header-acoes">
+        <button type="button" id="btn-atualizar" class="botao botao-secundario botao-compacto">Atualizar dados</button>
+        <button type="button" id="btn-sair" class="botao botao-texto botao-compacto">Sair</button>
+      </div>
+    </header>
+
+    <nav class="admin-abas" aria-label="Seções do painel">
+      <button type="button" id="aba-dashboard" class="botao-aba aba-ativa" aria-current="page">Dashboard</button>
+      <button type="button" id="aba-configuracoes" class="botao-aba">Configurações do Evento</button>
+    </nav>
+
+    <div id="secao-dashboard">
+    <section class="admin-metricas" id="admin-metricas" aria-label="Resumo de confirmações">
+      <div class="metrica-card">
+        <span class="metrica-valor" id="metrica-total">0</span>
+        <span class="metrica-label">Convidados</span>
+      </div>
+      <div class="metrica-card metrica-sucesso">
+        <span class="metrica-valor" id="metrica-confirmados">0</span>
+        <span class="metrica-label">Confirmados</span>
+      </div>
+      <div class="metrica-card metrica-erro">
+        <span class="metrica-valor" id="metrica-ausentes">0</span>
+        <span class="metrica-label">Ausentes</span>
+      </div>
+      <div class="metrica-card">
+        <span class="metrica-valor" id="metrica-pendentes">0</span>
+        <span class="metrica-label">Pendentes</span>
+      </div>
+      <div class="metrica-card">
+        <span class="metrica-valor" id="metrica-taxa">0%</span>
+        <span class="metrica-label">Taxa de confirmação</span>
+      </div>
+      <div class="metrica-card">
+        <span class="metrica-valor" id="metrica-restricoes">0</span>
+        <span class="metrica-label">Convites c/ restrição</span>
+      </div>
+    </section>
+
+    <p class="admin-ultima-atualizacao" id="admin-ultima-atualizacao"></p>
+
+    <section class="admin-controles" aria-label="Filtros e pesquisa">
+      <input
+        type="search"
+        id="input-busca"
+        class="campo-input campo-input-admin"
+        placeholder="Pesquisar por nome ou código..."
+        aria-label="Pesquisar por nome ou código"
+      >
+
+      <select id="select-filtro" class="campo-input campo-input-admin" aria-label="Filtrar por status">
+        <option value="todos">Todos</option>
+        <option value="confirmados">Confirmados</option>
+        <option value="ausentes">Ausentes</option>
+        <option value="pendentes">Pendentes</option>
+        <option value="restricao">Com restrição alimentar</option>
+      </select>
+
+      <select id="select-ordenacao" class="campo-input campo-input-admin" aria-label="Ordenar por">
+        <option value="nome">Ordenar por nome</option>
+        <option value="codigo">Ordenar por código</option>
+        <option value="status">Ordenar por status</option>
+        <option value="data">Ordenar por data</option>
+      </select>
+    </section>
+
+    <section class="admin-acoes-extra" aria-label="Ações">
+      <button type="button" id="btn-exportar-csv" class="botao botao-secundario botao-compacto">Exportar CSV</button>
+      <button type="button" id="btn-copiar-pendentes" class="botao botao-secundario botao-compacto">Copiar pendentes</button>
+      <button type="button" id="btn-copiar-codigos-pendentes" class="botao botao-secundario botao-compacto">Copiar códigos pendentes</button>
+    </section>
+
+    <section class="admin-tabela-wrapper" aria-label="Lista de convidados">
+      <table class="admin-tabela">
+        <thead>
+          <tr>
+            <th scope="col">Código</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Status</th>
+            <th scope="col">Restrição alimentar</th>
+            <th scope="col">Mensagem</th>
+            <th scope="col">Última atualização</th>
+          </tr>
+        </thead>
+        <tbody id="admin-tabela-corpo"></tbody>
+      </table>
+
+      <p class="admin-tabela-vazia" id="admin-tabela-vazia" hidden>Nenhum convidado encontrado para os filtros atuais.</p>
+    </section>
+    </div>
+
+    <div id="secao-configuracoes" hidden>
+      <section class="card card-configuracoes" aria-label="Configurações do evento">
+        <h2 class="titulo-configuracoes">Configurações do Evento</h2>
+        <p class="subtitulo-configuracoes">Essas informações são exibidas na tela inicial do site de RSVP.</p>
+
+        <form id="form-configuracoes">
+          <label for="config-nome-evento" class="campo-label">Nome do evento</label>
+          <input type="text" id="config-nome-evento" class="campo-input campo-input-admin" placeholder="Jantar de Noivado">
+
+          <label for="config-data-evento" class="campo-label">Data do evento</label>
+          <input type="text" id="config-data-evento" class="campo-input campo-input-admin" placeholder="19 de setembro de 2026">
+
+          <label for="config-horario-evento" class="campo-label">Horário</label>
+          <input type="text" id="config-horario-evento" class="campo-input campo-input-admin" placeholder="18h">
+
+          <label for="config-link-maps" class="campo-label">Link "Ver endereço e orientações"</label>
+          <input type="url" id="config-link-maps" class="campo-input campo-input-admin" placeholder="https://maps.app.goo.gl/...">
+
+          <label for="config-data-limite" class="campo-label">Data limite para confirmação</label>
+          <input type="date" id="config-data-limite" class="campo-input campo-input-admin">
+
+          <label for="config-site-noivos" class="campo-label">Link do site dos noivos</label>
+          <input type="url" id="config-site-noivos" class="campo-input campo-input-admin" placeholder="https://marcellaericardo.com.br">
+
+          <label class="campo-switch">
+            <input type="checkbox" id="config-exibir-site-noivos">
+            <span class="switch-visual"></span>
+            <span>Exibir botão "Acessar o site dos noivos" no site</span>
+          </label>
+
+          <p id="mensagem-configuracoes" class="mensagem-sucesso-configuracoes" role="status" aria-live="polite"></p>
+
+          <button type="submit" id="btn-salvar-configuracoes" class="botao botao-primario botao-configuracoes">Salvar configurações</button>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>

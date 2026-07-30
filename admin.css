@@ -1,0 +1,357 @@
+/* =========================================================
+   admin.css
+   Reaproveita as variáveis de :root definidas em style.css
+   (cores, tipografia, espaçamentos, raios, sombras, transições).
+   Aqui só ficam os componentes específicos do painel.
+========================================================= */
+
+body { overflow-x: auto; }
+
+/* =========================================================
+   LOGIN
+========================================================= */
+.admin-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espaco-md);
+}
+
+.card-login {
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+
+.titulo-admin {
+  font-size: 1.4rem;
+  color: var(--color-vinho);
+}
+
+.subtitulo-admin {
+  margin-top: var(--espaco-xs);
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+}
+
+#form-login {
+  margin-top: var(--espaco-lg);
+  text-align: left;
+}
+
+#form-login .campo-label { margin-top: var(--espaco-md); }
+#form-login .campo-label:first-child { margin-top: 0; }
+
+/* =========================================================
+   DASHBOARD — LAYOUT GERAL
+========================================================= */
+.admin-dashboard {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: var(--espaco-lg) max(var(--espaco-md), env(safe-area-inset-right))
+           var(--espaco-xl) max(var(--espaco-md), env(safe-area-inset-left));
+}
+
+.admin-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--espaco-md);
+  margin-bottom: var(--espaco-lg);
+}
+
+.titulo-admin-dashboard { text-align: left; }
+
+.admin-header-acoes {
+  display: flex;
+  gap: var(--espaco-sm);
+}
+
+.botao-compacto {
+  width: auto;
+  margin-top: 0;
+  padding: 10px var(--espaco-md);
+  font-size: 0.85rem;
+}
+
+.botao-texto {
+  background: transparent;
+  color: var(--color-texto-suave);
+  border: 1px solid var(--color-borda);
+}
+
+.botao-texto:hover:not(:disabled) {
+  background: var(--color-creme);
+  color: var(--color-vinho);
+}
+
+/* =========================================================
+   MÉTRICAS
+========================================================= */
+.admin-metricas {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--espaco-sm);
+  margin-bottom: var(--espaco-sm);
+}
+
+.metrica-card {
+  background: var(--color-branco);
+  border: 1px solid var(--color-borda);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-card);
+  padding: var(--espaco-md);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metrica-valor {
+  font-family: var(--fonte-titulo);
+  font-size: 1.6rem;
+  color: var(--color-vinho);
+}
+
+.metrica-label {
+  font-size: 0.75rem;
+  color: var(--color-texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metrica-sucesso .metrica-valor { color: var(--color-sucesso); }
+.metrica-erro .metrica-valor { color: var(--color-erro); }
+
+.admin-ultima-atualizacao {
+  font-size: 0.8rem;
+  color: var(--color-texto-suave);
+  margin-bottom: var(--espaco-lg);
+}
+
+/* =========================================================
+   CONTROLES (busca, filtro, ordenação)
+========================================================= */
+.admin-controles {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espaco-sm);
+  margin-bottom: var(--espaco-sm);
+}
+
+.campo-input-admin {
+  text-transform: none;
+  letter-spacing: normal;
+  text-align: left;
+  font-weight: 400;
+}
+
+select.campo-input-admin {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--color-vinho) 50%),
+                     linear-gradient(135deg, var(--color-vinho) 50%, transparent 50%);
+  background-position: calc(100% - 20px) center, calc(100% - 15px) center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: var(--espaco-lg);
+}
+
+.admin-acoes-extra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espaco-sm);
+  margin-bottom: var(--espaco-lg);
+}
+
+.admin-acoes-extra .botao { flex: 1 1 auto; }
+
+/* =========================================================
+   TABELA
+========================================================= */
+.admin-tabela-wrapper {
+  background: var(--color-branco);
+  border: 1px solid var(--color-borda);
+  border-radius: var(--raio-lg);
+  box-shadow: var(--sombra-card);
+  overflow-x: auto;
+}
+
+.admin-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+  font-size: 0.85rem;
+}
+
+.admin-tabela th,
+.admin-tabela td {
+  text-align: left;
+  padding: var(--espaco-sm) var(--espaco-md);
+  border-bottom: 1px solid var(--color-borda);
+  white-space: nowrap;
+}
+
+.admin-tabela td.celula-mensagem,
+.admin-tabela td.celula-restricao {
+  white-space: normal;
+  max-width: 220px;
+}
+
+.admin-tabela th {
+  font-family: var(--fonte-titulo);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-texto-suave);
+  background: var(--color-creme);
+}
+
+.admin-tabela tbody tr:last-child td { border-bottom: none; }
+.admin-tabela tbody tr:hover { background: var(--color-creme); }
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--raio-pill);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-confirmado { background: rgba(46, 107, 79, 0.12); color: var(--color-sucesso); }
+.status-ausente { background: rgba(179, 38, 30, 0.1); color: var(--color-erro); }
+.status-pendente { background: var(--color-azul); color: var(--color-vinho); }
+
+.admin-tabela-vazia {
+  padding: var(--espaco-lg);
+  text-align: center;
+  color: var(--color-texto-suave);
+  font-size: 0.9rem;
+}
+
+/* =========================================================
+   ABAS (Dashboard / Configurações do Evento)
+========================================================= */
+.admin-abas {
+  display: flex;
+  gap: var(--espaco-sm);
+  margin-bottom: var(--espaco-lg);
+  border-bottom: 1px solid var(--color-borda);
+}
+
+.botao-aba {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: var(--espaco-sm) var(--espaco-xs);
+  font-family: var(--fonte-texto);
+  font-size: 0.9rem;
+  color: var(--color-texto-suave);
+  cursor: pointer;
+  transition: color var(--duracao-transicao) var(--easing),
+              border-color var(--duracao-transicao) var(--easing);
+}
+
+.botao-aba:hover { color: var(--color-vinho); }
+
+.botao-aba.aba-ativa {
+  color: var(--color-vinho);
+  border-bottom-color: var(--color-vinho);
+  font-weight: 500;
+}
+
+/* =========================================================
+   CONFIGURAÇÕES DO EVENTO
+========================================================= */
+.card-configuracoes {
+  max-width: 560px;
+}
+
+.titulo-configuracoes {
+  font-size: 1.2rem;
+  color: var(--color-vinho);
+}
+
+.subtitulo-configuracoes {
+  margin-top: var(--espaco-xs);
+  margin-bottom: var(--espaco-lg);
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+}
+
+#form-configuracoes { text-align: left; }
+#form-configuracoes .campo-label { margin-top: var(--espaco-md); }
+#form-configuracoes .campo-label:first-child { margin-top: 0; }
+
+.campo-switch {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-sm);
+  margin-top: var(--espaco-lg);
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--color-texto);
+}
+
+.campo-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-visual {
+  flex-shrink: 0;
+  width: 40px;
+  height: 22px;
+  border-radius: var(--raio-pill);
+  background: var(--color-borda);
+  position: relative;
+  transition: background var(--duracao-transicao) var(--easing);
+}
+
+.switch-visual::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-branco);
+  transition: transform var(--duracao-transicao) var(--easing);
+}
+
+.campo-switch input:checked + .switch-visual {
+  background: var(--color-vinho);
+}
+
+.campo-switch input:checked + .switch-visual::after {
+  transform: translateX(18px);
+}
+
+.campo-switch input:focus-visible + .switch-visual {
+  outline: 2px solid var(--color-vinho);
+  outline-offset: 2px;
+}
+
+.mensagem-sucesso-configuracoes {
+  min-height: 18px;
+  color: var(--color-sucesso);
+  font-size: 0.85rem;
+  margin-top: var(--espaco-md);
+}
+
+.botao-configuracoes { max-width: 280px; }
+
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+@media (min-width: 640px) {
+  .admin-metricas { grid-template-columns: repeat(3, 1fr); }
+  .admin-controles { grid-template-columns: 2fr 1fr 1fr; }
+}
+
+@media (min-width: 960px) {
+  .admin-metricas { grid-template-columns: repeat(6, 1fr); }
+}

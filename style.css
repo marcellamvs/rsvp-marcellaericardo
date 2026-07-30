@@ -1,0 +1,574 @@
+/* =========================================================
+   DESIGN TOKENS
+========================================================= */
+:root {
+  /* Cores */
+  --color-creme: #FFF5EC;
+  --color-vinho: #610018;
+  --color-vinho-escuro: #45000f;
+  --color-azul: #B9C9E3;
+  --color-branco: #FFFFFF;
+  --color-borda: #ECE3D8;
+  --color-texto: #3A2E28;
+  --color-texto-suave: #7A6D63;
+  --color-erro: #B3261E;
+  --color-sucesso: #2E6B4F;
+
+  /* Tipografia */
+  --fonte-titulo: 'Cinzel', serif;
+  --fonte-texto: 'Jost', sans-serif;
+
+  /* Espaçamentos */
+  --espaco-xs: 6px;
+  --espaco-sm: 12px;
+  --espaco-md: 20px;
+  --espaco-lg: 32px;
+  --espaco-xl: 48px;
+
+  /* Bordas e raios */
+  --raio-sm: 8px;
+  --raio-md: 16px;
+  --raio-lg: 24px;
+  --raio-pill: 999px;
+
+  /* Sombra */
+  --sombra-card: 0 8px 30px rgba(97, 0, 24, 0.08);
+  --sombra-botao: 0 4px 14px rgba(97, 0, 24, 0.18);
+
+  /* Animação */
+  --duracao-transicao: 320ms;
+  --easing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Layout */
+  --largura-max: 480px;
+}
+
+/* =========================================================
+   RESET
+========================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.fieldset-reset {
+  border: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.fieldset-reset legend {
+  display: block;
+  padding: 0;
+  width: 100%;
+}
+
+body {
+  background: var(--color-creme);
+  color: var(--color-texto);
+  font-family: var(--fonte-texto);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+h1, h2, h3 { font-family: var(--fonte-titulo); margin: 0; }
+p { margin: 0; }
+button { font-family: inherit; }
+textarea { font-family: inherit; }
+
+/* Foco visível para acessibilidade */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-vinho);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* =========================================================
+   LAYOUT GERAL
+========================================================= */
+.app {
+  max-width: var(--largura-max);
+  margin: 0 auto;
+  padding: var(--espaco-lg) max(var(--espaco-md), env(safe-area-inset-right))
+           max(var(--espaco-xl), env(safe-area-inset-bottom))
+           max(var(--espaco-md), env(safe-area-inset-left));
+  min-height: 100vh;
+  position: relative;
+}
+
+/* =========================================================
+   BARRA DE PROGRESSO
+========================================================= */
+.progress-bar {
+  display: flex;
+  gap: var(--espaco-xs);
+  margin-bottom: var(--espaco-lg);
+}
+
+.progress-step {
+  flex: 1;
+  height: 4px;
+  border-radius: var(--raio-pill);
+  background: var(--color-borda);
+  transition: background var(--duracao-transicao) var(--easing);
+}
+
+.progress-step.ativo {
+  background: var(--color-vinho);
+}
+
+/* =========================================================
+   TELAS
+========================================================= */
+.tela {
+  display: none;
+}
+
+.tela-ativa {
+  display: block;
+  animation: fade-in var(--duracao-transicao) var(--easing);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+.card {
+  background: var(--color-branco);
+  border: 1px solid var(--color-borda);
+  border-radius: var(--raio-lg);
+  box-shadow: var(--sombra-card);
+  padding: var(--espaco-lg) var(--espaco-md);
+}
+
+.card-hero {
+  text-align: center;
+}
+
+/* =========================================================
+   HERO / TELA 1
+========================================================= */
+.logo-space {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto var(--espaco-md);
+  border-radius: 50%;
+  background: var(--color-creme);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.logo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+.titulo-nomes {
+  font-size: 1.9rem;
+  color: var(--color-vinho);
+  letter-spacing: 0.5px;
+}
+
+.subtitulo {
+  margin-top: var(--espaco-xs);
+  font-family: var(--fonte-texto);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 0.75rem;
+  color: var(--color-texto-suave);
+}
+
+.frase-decorativa {
+  margin-top: var(--espaco-sm);
+  font-family: var(--fonte-texto);
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: 0.4px;
+  font-size: 1.05rem;
+  color: var(--color-vinho);
+}
+
+.info-evento {
+  margin: var(--espaco-lg) 0;
+  padding: var(--espaco-md);
+  background: var(--color-creme);
+  border-radius: var(--raio-md);
+  text-align: left;
+}
+
+.info-linha {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-sm);
+  padding: var(--espaco-xs) 0;
+  font-size: 0.95rem;
+}
+
+.info-icone { font-size: 1.05rem; }
+
+.link-endereco {
+  color: var(--color-vinho);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.info-prazo {
+  color: var(--color-texto-suave);
+  font-size: 0.85rem;
+}
+
+.texto-convite {
+  text-align: left;
+  font-size: 0.95rem;
+  color: var(--color-texto);
+  margin-top: var(--espaco-md);
+}
+
+/* =========================================================
+   FORMULÁRIO
+========================================================= */
+#form-codigo { margin-top: var(--espaco-lg); text-align: left; }
+
+.campo-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: var(--espaco-xs);
+  color: var(--color-texto);
+}
+
+.campo-input,
+.campo-textarea {
+  width: 100%;
+  padding: 14px var(--espaco-md);
+  border: 1px solid var(--color-borda);
+  border-radius: var(--raio-md);
+  background: var(--color-creme);
+  color: var(--color-texto);
+  font-size: 1rem;
+  font-family: var(--fonte-texto);
+  transition: border-color var(--duracao-transicao) var(--easing);
+}
+
+.campo-input {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.campo-textarea {
+  resize: vertical;
+  text-transform: none;
+  letter-spacing: normal;
+  text-align: left;
+}
+
+.campo-input:focus,
+.campo-textarea:focus {
+  border-color: var(--color-vinho);
+  box-shadow: 0 0 0 3px rgba(97, 0, 24, 0.1);
+}
+
+.mensagem-erro {
+  min-height: 18px;
+  color: var(--color-erro);
+  font-size: 0.8rem;
+  margin-top: var(--espaco-xs);
+}
+
+/* =========================================================
+   BOTÕES
+========================================================= */
+.botao {
+  display: inline-block;
+  width: 100%;
+  padding: 15px var(--espaco-md);
+  border-radius: var(--raio-pill);
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--duracao-transicao) var(--easing),
+              opacity var(--duracao-transicao) var(--easing),
+              box-shadow var(--duracao-transicao) var(--easing);
+  margin-top: var(--espaco-md);
+}
+
+.botao:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.botao-primario {
+  background: var(--color-vinho);
+  color: var(--color-branco);
+  box-shadow: var(--sombra-botao);
+}
+
+.botao-primario:hover:not(:disabled) { background: var(--color-vinho-escuro); }
+.botao-primario:active:not(:disabled) { transform: scale(0.98); }
+
+.botao-secundario {
+  background: var(--color-branco);
+  color: var(--color-vinho);
+  border: 1px solid var(--color-vinho);
+}
+
+.botao-secundario:hover:not(:disabled) { background: var(--color-creme); }
+.botao-secundario:active:not(:disabled) { transform: scale(0.98); }
+
+.acoes-tela {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--espaco-sm);
+}
+
+.acoes-tela .botao { margin-top: 0; }
+
+/* =========================================================
+   TELA 02 — CONVIDADOS
+========================================================= */
+.titulo-tela {
+  font-size: 1.3rem;
+  color: var(--color-vinho);
+  text-align: center;
+}
+
+.titulo-tela-secundario {
+  font-size: 1.1rem;
+}
+
+.subtitulo-tela {
+  text-align: center;
+  color: var(--color-texto-suave);
+  font-size: 0.9rem;
+  margin-top: var(--espaco-xs);
+  margin-bottom: var(--espaco-lg);
+}
+
+.lista-convidados {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-sm);
+}
+
+.aviso-edicao {
+  background: var(--color-azul);
+  color: var(--color-vinho);
+  border-radius: var(--raio-md);
+  padding: var(--espaco-sm) var(--espaco-md);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: var(--espaco-md);
+}
+
+.card-convidado {
+  border: 1px solid var(--color-borda);
+  border-radius: var(--raio-md);
+  padding: var(--espaco-md);
+  background: var(--color-creme);
+  box-shadow: 0 2px 8px rgba(97, 0, 24, 0.05);
+}
+
+.tela:focus {
+  outline: none;
+}
+
+.nome-convidado {
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: var(--espaco-sm);
+}
+
+.opcoes-radio {
+  display: flex;
+  gap: var(--espaco-md);
+}
+
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-xs);
+  cursor: pointer;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.radio-item input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.radio-visual {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--color-azul);
+  flex-shrink: 0;
+  position: relative;
+  transition: border-color var(--duracao-transicao) var(--easing);
+}
+
+.radio-item input:checked + .radio-visual {
+  border-color: var(--color-vinho);
+}
+
+.radio-item input:checked + .radio-visual::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--color-vinho);
+}
+
+/* =========================================================
+   TELA 03 — DETALHES
+========================================================= */
+.bloco-pergunta {
+  margin-bottom: var(--espaco-lg);
+  text-align: left;
+}
+
+.pergunta {
+  font-size: 0.95rem;
+  margin-top: var(--espaco-xs);
+  margin-bottom: var(--espaco-md);
+  color: var(--color-texto);
+}
+
+.pergunta-opcional {
+  color: var(--color-texto-suave);
+  font-size: 0.8rem;
+  margin-bottom: var(--espaco-sm);
+}
+
+#bloco-restricao-texto { margin-top: var(--espaco-md); }
+
+/* =========================================================
+   TELA 04 — AGRADECIMENTO
+========================================================= */
+.card-final {
+  text-align: center;
+  padding: var(--espaco-xl) var(--espaco-md);
+}
+
+.icone-final {
+  font-size: 2.5rem;
+  margin-bottom: var(--espaco-md);
+}
+
+.titulo-final {
+  font-size: 1.4rem;
+  color: var(--color-vinho);
+  margin-bottom: var(--espaco-md);
+}
+
+.texto-final {
+  font-size: 0.95rem;
+  color: var(--color-texto);
+  white-space: pre-line;
+}
+
+.assinatura-final {
+  margin-top: var(--espaco-lg);
+  font-family: var(--fonte-titulo);
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  color: var(--color-vinho);
+}
+
+/* =========================================================
+   LOADING OVERLAY
+========================================================= */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 245, 236, 0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.loading-overlay.visivel { display: flex; }
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-borda);
+  border-top-color: var(--color-vinho);
+  border-radius: 50%;
+  animation: girar 700ms linear infinite;
+}
+
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+#toast-container {
+  position: fixed;
+  bottom: var(--espaco-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-xs);
+  width: calc(100% - 2 * var(--espaco-md));
+  max-width: var(--largura-max);
+  align-items: center;
+}
+
+.toast {
+  background: var(--color-vinho);
+  color: var(--color-branco);
+  padding: 12px var(--espaco-md);
+  border-radius: var(--raio-md);
+  font-size: 0.85rem;
+  box-shadow: var(--sombra-botao);
+  animation: fade-in var(--duracao-transicao) var(--easing);
+  text-align: center;
+}
+
+.toast-erro { background: var(--color-erro); }
+.toast-sucesso { background: var(--color-sucesso); }
+
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+@media (min-width: 481px) {
+  .app { padding-top: var(--espaco-xl); }
+}
