@@ -355,3 +355,188 @@ select.campo-input-admin {
 @media (min-width: 960px) {
   .admin-metricas { grid-template-columns: repeat(6, 1fr); }
 }
+
+/* =========================================================
+   LISTA DE PRESENTES — MÓDULO NOVO
+   Reaproveita os mesmos tokens, cards, botões e tabela já
+   definidos acima; aqui só ficam os componentes específicos
+   deste módulo (métricas extras, seções de CRUD e modais).
+========================================================= */
+
+.admin-metricas-presentes { margin-top: var(--espaco-lg); }
+
+.titulo-secao-dashboard {
+  font-size: 1.1rem;
+  color: var(--color-vinho);
+  margin-bottom: var(--espaco-sm);
+}
+
+.admin-ultimas-contribuicoes {
+  margin-top: var(--espaco-lg);
+  margin-bottom: var(--espaco-lg);
+}
+
+.lista-ultimas-contribuicoes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-xs);
+}
+
+.item-ultima-contribuicao {
+  background: var(--color-branco);
+  border: 1px solid var(--color-borda);
+  border-radius: var(--raio-md);
+  padding: var(--espaco-sm) var(--espaco-md);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--espaco-sm);
+  font-size: 0.85rem;
+}
+
+.item-ultima-contribuicao .destaque { font-weight: 500; color: var(--color-texto); }
+.item-ultima-contribuicao .detalhe { color: var(--color-texto-suave); }
+
+/* =========================================================
+   CABEÇALHO DE SEÇÃO (Presentes / Categorias)
+========================================================= */
+.admin-secao-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco-sm);
+  margin-bottom: var(--espaco-md);
+}
+
+.admin-secao-topo .titulo-secao-dashboard { margin-bottom: 0; }
+
+.botao-nova-linha { white-space: nowrap; }
+
+/* =========================================================
+   AÇÕES NA TABELA (editar / excluir)
+========================================================= */
+.acoes-tabela {
+  display: flex;
+  gap: var(--espaco-xs);
+  white-space: nowrap;
+}
+
+.botao-acao-tabela {
+  border: 1px solid var(--color-borda);
+  background: var(--color-branco);
+  color: var(--color-texto);
+  border-radius: var(--raio-sm);
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background var(--duracao-transicao) var(--easing),
+              border-color var(--duracao-transicao) var(--easing);
+}
+
+.botao-acao-tabela:hover { border-color: var(--color-vinho); color: var(--color-vinho); }
+.botao-acao-tabela.acao-excluir:hover { border-color: var(--color-erro); color: var(--color-erro); }
+
+.badge-ativo,
+.badge-inativo {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--raio-pill);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badge-ativo { background: rgba(46, 107, 79, 0.12); color: var(--color-sucesso); }
+.badge-inativo { background: rgba(122, 109, 99, 0.15); color: var(--color-texto-suave); }
+
+/* =========================================================
+   FILTRO DE CONTRIBUIÇÕES
+========================================================= */
+.admin-controles-contribuicoes {
+  grid-template-columns: 1fr;
+  max-width: 320px;
+}
+
+/* =========================================================
+   MODAIS (Presente / Categoria / Contribuição)
+   Mesmo padrão visual do modal "Presentear" do site público.
+========================================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(58, 46, 40, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espaco-md);
+  z-index: 150;
+}
+
+.modal-overlay[hidden] { display: none; }
+
+.modal-card {
+  background: var(--color-branco);
+  border-radius: var(--raio-lg);
+  box-shadow: var(--sombra-card);
+  padding: var(--espaco-lg) var(--espaco-md);
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  text-align: left;
+  animation: fade-in var(--duracao-transicao) var(--easing);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-fechar {
+  position: absolute;
+  top: var(--espaco-sm);
+  right: var(--espaco-sm);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-creme);
+  color: var(--color-texto);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.modal-fechar:hover { background: var(--color-borda); }
+
+.modal-titulo {
+  font-size: 1.2rem;
+  color: var(--color-vinho);
+  padding-right: var(--espaco-lg);
+}
+
+.modal-descricao {
+  margin-top: var(--espaco-xs);
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+}
+
+#form-presente .campo-label,
+#form-categoria .campo-label,
+#form-contribuicao .campo-label { margin-top: var(--espaco-md); }
+
+#form-presente .campo-label:first-of-type,
+#form-categoria .campo-label:first-of-type,
+#form-contribuicao .campo-label:first-of-type { margin-top: 0; }
+
+#form-presente .campo-switch,
+#form-categoria .campo-switch,
+#form-contribuicao .campo-switch { margin-top: var(--espaco-lg); }
+
+#form-presente button[type="submit"],
+#form-categoria button[type="submit"],
+#form-contribuicao button[type="submit"] { margin-top: var(--espaco-lg); }

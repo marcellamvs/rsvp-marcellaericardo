@@ -28,7 +28,12 @@ const estado = {
   linhas: [],         // dados já cruzados, prontos para exibir
   busca: '',
   filtro: 'todos',
-  ordenacao: 'nome'
+  ordenacao: 'nome',
+
+  presentes: [],       // [{ id, nome, categoria, descricao, imagem, valorSugerido, linkMercadoPago, ativo }]
+  categorias: [],      // [{ id, nome, ativo }]
+  contribuicoes: [],   // [{ id, codigo, nome, grupoFamiliar, presenteId, presente, categoria, mensagem, valorSugerido, data, pagamento, valorRecebido, formaPagamento, observacoes, agradecimentoEnviado }]
+  filtroPagamento: 'todos'
 };
 
 const dom = {};
@@ -46,6 +51,29 @@ function init() {
   dom.abaDashboard.addEventListener('click', () => trocarAba('dashboard'));
   dom.abaConfiguracoes.addEventListener('click', () => trocarAba('configuracoes'));
   dom.formConfiguracoes.addEventListener('submit', onSubmitConfiguracoes);
+
+  dom.abaPresentes.addEventListener('click', () => trocarAba('presentes'));
+  dom.abaCategorias.addEventListener('click', () => trocarAba('categorias'));
+  dom.abaContribuicoes.addEventListener('click', () => trocarAba('contribuicoes'));
+
+  dom.btnNovoPresente.addEventListener('click', () => abrirModalPresente(null));
+  dom.formPresente.addEventListener('submit', onSubmitPresente);
+
+  dom.btnNovaCategoria.addEventListener('click', () => abrirModalCategoria(null));
+  dom.formCategoria.addEventListener('submit', onSubmitCategoria);
+
+  dom.selectFiltroPagamento.addEventListener('change', () => renderizarTabelaContribuicoes());
+  dom.formContribuicao.addEventListener('submit', onSubmitContribuicao);
+
+  document.querySelectorAll('[data-fechar-modal]').forEach((botao) => {
+    botao.addEventListener('click', () => fecharModal(document.getElementById(botao.dataset.fecharModal)));
+  });
+
+  document.querySelectorAll('.modal-overlay').forEach((overlay) => {
+    overlay.addEventListener('click', (evento) => {
+      if (evento.target === overlay) fecharModal(overlay);
+    });
+  });
 
   dom.inputBusca.addEventListener('input', onMudarControle);
   dom.selectFiltro.addEventListener('change', onMudarControle);
@@ -108,6 +136,68 @@ function cachearElementos() {
 
   dom.tabelaCorpo = document.getElementById('admin-tabela-corpo');
   dom.tabelaVazia = document.getElementById('admin-tabela-vazia');
+
+  /* ---------- Lista de Presentes: abas e métricas extras ---------- */
+  dom.abaPresentes = document.getElementById('aba-presentes');
+  dom.abaCategorias = document.getElementById('aba-categorias');
+  dom.abaContribuicoes = document.getElementById('aba-contribuicoes');
+  dom.secaoPresentes = document.getElementById('secao-presentes');
+  dom.secaoCategorias = document.getElementById('secao-categorias');
+  dom.secaoContribuicoes = document.getElementById('secao-contribuicoes');
+
+  dom.metricaQtdPresentes = document.getElementById('metrica-qtd-presentes');
+  dom.metricaQtdContribuicoes = document.getElementById('metrica-qtd-contribuicoes');
+  dom.metricaValorSugeridoTotal = document.getElementById('metrica-valor-sugerido-total');
+  dom.metricaValorConfirmadoTotal = document.getElementById('metrica-valor-confirmado-total');
+  dom.listaUltimasContribuicoes = document.getElementById('lista-ultimas-contribuicoes');
+  dom.ultimasContribuicoesVazia = document.getElementById('ultimas-contribuicoes-vazia');
+
+  /* ---------- Presentes: tabela e modal ---------- */
+  dom.btnNovoPresente = document.getElementById('btn-novo-presente');
+  dom.tabelaPresentesCorpo = document.getElementById('tabela-presentes-corpo');
+  dom.tabelaPresentesVazia = document.getElementById('tabela-presentes-vazia');
+  dom.modalPresente = document.getElementById('modal-presente');
+  dom.modalPresenteTitulo = document.getElementById('modal-presente-titulo');
+  dom.formPresente = document.getElementById('form-presente');
+  dom.presenteId = document.getElementById('presente-id');
+  dom.presenteNome = document.getElementById('presente-nome');
+  dom.presenteCategoria = document.getElementById('presente-categoria');
+  dom.listaNomesCategorias = document.getElementById('lista-nomes-categorias');
+  dom.presenteDescricao = document.getElementById('presente-descricao');
+  dom.presenteImagem = document.getElementById('presente-imagem');
+  dom.presenteValor = document.getElementById('presente-valor');
+  dom.presenteLink = document.getElementById('presente-link');
+  dom.presenteAtivo = document.getElementById('presente-ativo');
+  dom.erroPresente = document.getElementById('erro-presente');
+  dom.btnSalvarPresente = document.getElementById('btn-salvar-presente');
+
+  /* ---------- Categorias: tabela e modal ---------- */
+  dom.btnNovaCategoria = document.getElementById('btn-nova-categoria');
+  dom.tabelaCategoriasCorpo = document.getElementById('tabela-categorias-corpo');
+  dom.tabelaCategoriasVazia = document.getElementById('tabela-categorias-vazia');
+  dom.modalCategoria = document.getElementById('modal-categoria');
+  dom.modalCategoriaTitulo = document.getElementById('modal-categoria-titulo');
+  dom.formCategoria = document.getElementById('form-categoria');
+  dom.categoriaId = document.getElementById('categoria-id');
+  dom.categoriaNome = document.getElementById('categoria-nome');
+  dom.categoriaAtiva = document.getElementById('categoria-ativa');
+  dom.erroCategoria = document.getElementById('erro-categoria');
+  dom.btnSalvarCategoria = document.getElementById('btn-salvar-categoria');
+
+  /* ---------- Contribuições: tabela, filtro e modal ---------- */
+  dom.selectFiltroPagamento = document.getElementById('select-filtro-pagamento');
+  dom.tabelaContribuicoesCorpo = document.getElementById('tabela-contribuicoes-corpo');
+  dom.tabelaContribuicoesVazia = document.getElementById('tabela-contribuicoes-vazia');
+  dom.modalContribuicao = document.getElementById('modal-contribuicao');
+  dom.modalContribuicaoDescricao = document.getElementById('modal-contribuicao-descricao');
+  dom.formContribuicao = document.getElementById('form-contribuicao');
+  dom.contribuicaoId = document.getElementById('contribuicao-id');
+  dom.contribuicaoPagamento = document.getElementById('contribuicao-pagamento');
+  dom.contribuicaoValorRecebido = document.getElementById('contribuicao-valor-recebido');
+  dom.contribuicaoFormaPagamento = document.getElementById('contribuicao-forma-pagamento');
+  dom.contribuicaoObservacoes = document.getElementById('contribuicao-observacoes');
+  dom.contribuicaoAgradecimento = document.getElementById('contribuicao-agradecimento');
+  dom.btnSalvarContribuicao = document.getElementById('btn-salvar-contribuicao');
 }
 
 /* =========================================================
@@ -153,6 +243,10 @@ function sair() {
   estado.confirmacoes = [];
   estado.configuracoes = {};
   estado.linhas = [];
+  estado.presentes = [];
+  estado.categorias = [];
+  estado.contribuicoes = [];
+  estado.filtroPagamento = 'todos';
 
   dom.formLogin.reset();
   dom.inputSenha.value = '';
@@ -178,13 +272,27 @@ function mostrarDashboard() {
    ABAS (Dashboard / Configurações do Evento)
 ========================================================= */
 function trocarAba(nome) {
-  const dashboardAtivo = nome === 'dashboard';
+  const secoes = {
+    dashboard: dom.secaoDashboard,
+    configuracoes: dom.secaoConfiguracoes,
+    presentes: dom.secaoPresentes,
+    categorias: dom.secaoCategorias,
+    contribuicoes: dom.secaoContribuicoes
+  };
 
-  dom.secaoDashboard.hidden = !dashboardAtivo;
-  dom.secaoConfiguracoes.hidden = dashboardAtivo;
+  const abas = {
+    dashboard: dom.abaDashboard,
+    configuracoes: dom.abaConfiguracoes,
+    presentes: dom.abaPresentes,
+    categorias: dom.abaCategorias,
+    contribuicoes: dom.abaContribuicoes
+  };
 
-  dom.abaDashboard.classList.toggle('aba-ativa', dashboardAtivo);
-  dom.abaConfiguracoes.classList.toggle('aba-ativa', !dashboardAtivo);
+  Object.keys(secoes).forEach((chave) => {
+    secoes[chave].hidden = chave !== nome;
+    abas[chave].classList.toggle('aba-ativa', chave === nome);
+    abas[chave].setAttribute('aria-current', chave === nome ? 'page' : 'false');
+  });
 }
 
 /* =========================================================
@@ -273,6 +381,16 @@ function aplicarDados(data) {
   estado.linhas = cruzarDados(estado.convidados, estado.confirmacoes);
   renderizarDashboard();
   preencherFormularioConfiguracoes(estado.configuracoes);
+
+  estado.presentes = data.presentes || [];
+  estado.categorias = data.categorias || [];
+  estado.contribuicoes = data.contribuicoes || [];
+  renderizarMetricasPresentes();
+  renderizarUltimasContribuicoes();
+  renderizarTabelaPresentes();
+  renderizarTabelaCategorias();
+  renderizarTabelaContribuicoes();
+  preencherDatalistCategorias();
 }
 
 /* =========================================================
@@ -528,6 +646,464 @@ async function copiarPendentes(campo) {
     console.error('[Admin] Falha ao copiar para a área de transferência:', erro);
     mostrarToast('Não foi possível copiar. Tente selecionar e copiar manualmente.', 'erro');
   }
+}
+
+/* =========================================================
+   LISTA DE PRESENTES — MÓDULO NOVO
+========================================================= */
+function formatarMoeda(valor) {
+  return Number(valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+/* ---------- Métricas extras no Dashboard ---------- */
+function renderizarMetricasPresentes() {
+  const contribuicoesValidas = estado.contribuicoes.filter((c) => c.pagamento !== 'Cancelado');
+  const valorSugeridoTotal = contribuicoesValidas.reduce((soma, c) => soma + (c.valorSugerido || 0), 0);
+  const valorConfirmadoTotal = estado.contribuicoes
+    .filter((c) => c.pagamento === 'Pago')
+    .reduce((soma, c) => soma + (c.valorRecebido || 0), 0);
+
+  dom.metricaQtdPresentes.textContent = estado.presentes.length;
+  dom.metricaQtdContribuicoes.textContent = estado.contribuicoes.length;
+  dom.metricaValorSugeridoTotal.textContent = formatarMoeda(valorSugeridoTotal);
+  dom.metricaValorConfirmadoTotal.textContent = formatarMoeda(valorConfirmadoTotal);
+}
+
+function renderizarUltimasContribuicoes() {
+  const ultimas = [...estado.contribuicoes]
+    .sort((a, b) => String(b.data).localeCompare(String(a.data)))
+    .slice(0, 5);
+
+  dom.listaUltimasContribuicoes.innerHTML = '';
+  dom.ultimasContribuicoesVazia.hidden = ultimas.length > 0;
+
+  const fragmento = document.createDocumentFragment();
+
+  ultimas.forEach((contribuicao) => {
+    const item = document.createElement('li');
+    item.className = 'item-ultima-contribuicao';
+
+    const principal = document.createElement('span');
+    principal.className = 'destaque';
+    principal.textContent = `${contribuicao.nome} → ${contribuicao.presente}`;
+
+    const detalhe = document.createElement('span');
+    detalhe.className = 'detalhe';
+    detalhe.textContent = contribuicao.data ? formatarDataHora(contribuicao.data) : '—';
+
+    item.append(principal, detalhe);
+    fragmento.appendChild(item);
+  });
+
+  dom.listaUltimasContribuicoes.appendChild(fragmento);
+}
+
+/* ---------- Presentes: tabela ---------- */
+function renderizarTabelaPresentes() {
+  dom.tabelaPresentesCorpo.innerHTML = '';
+  dom.tabelaPresentesVazia.hidden = estado.presentes.length > 0;
+
+  const fragmento = document.createDocumentFragment();
+
+  estado.presentes.forEach((presente) => {
+    const tr = document.createElement('tr');
+
+    tr.appendChild(criarCelula(presente.nome));
+    tr.appendChild(criarCelula(presente.categoria));
+    tr.appendChild(criarCelula(formatarMoeda(presente.valorSugerido)));
+
+    const tdAtivo = document.createElement('td');
+    const badge = document.createElement('span');
+    badge.className = presente.ativo ? 'badge-ativo' : 'badge-inativo';
+    badge.textContent = presente.ativo ? 'Ativo' : 'Inativo';
+    tdAtivo.appendChild(badge);
+    tr.appendChild(tdAtivo);
+
+    tr.appendChild(criarCelulaAcoesPresente(presente));
+
+    fragmento.appendChild(tr);
+  });
+
+  dom.tabelaPresentesCorpo.appendChild(fragmento);
+}
+
+function criarCelulaAcoesPresente(presente) {
+  const td = document.createElement('td');
+  const container = document.createElement('div');
+  container.className = 'acoes-tabela';
+
+  const btnEditar = document.createElement('button');
+  btnEditar.type = 'button';
+  btnEditar.className = 'botao-acao-tabela';
+  btnEditar.textContent = 'Editar';
+  btnEditar.addEventListener('click', () => abrirModalPresente(presente));
+
+  const btnExcluir = document.createElement('button');
+  btnExcluir.type = 'button';
+  btnExcluir.className = 'botao-acao-tabela acao-excluir';
+  btnExcluir.textContent = 'Excluir';
+  btnExcluir.addEventListener('click', () => confirmarExclusaoPresente(presente));
+
+  container.append(btnEditar, btnExcluir);
+  td.appendChild(container);
+  return td;
+}
+
+/* ---------- Presentes: modal (criar/editar) ---------- */
+function abrirModalPresente(presente) {
+  dom.formPresente.reset();
+  limparErro(dom.erroPresente);
+
+  dom.modalPresenteTitulo.textContent = presente ? 'Editar presente' : 'Adicionar presente';
+  dom.presenteId.value = presente ? presente.id : '';
+  dom.presenteNome.value = presente ? presente.nome : '';
+  dom.presenteCategoria.value = presente ? presente.categoria : '';
+  dom.presenteDescricao.value = presente ? presente.descricao : '';
+  dom.presenteImagem.value = presente ? presente.imagem : '';
+  dom.presenteValor.value = presente ? presente.valorSugerido : '';
+  dom.presenteLink.value = presente ? presente.linkMercadoPago : '';
+  dom.presenteAtivo.checked = presente ? presente.ativo : true;
+
+  abrirModal(dom.modalPresente);
+  dom.presenteNome.focus();
+}
+
+async function onSubmitPresente(evento) {
+  evento.preventDefault();
+  limparErro(dom.erroPresente);
+
+  const nome = dom.presenteNome.value.trim();
+  const categoria = dom.presenteCategoria.value.trim();
+
+  if (!nome || !categoria) {
+    mostrarErro(dom.erroPresente, 'Informe nome e categoria do presente.');
+    return;
+  }
+
+  await executarComFeedback({
+    botao: dom.btnSalvarPresente,
+    textoCarregando: 'Salvando...',
+    acao: async () => {
+      const resposta = await chamarBackend('salvarPresente', {
+        usuario: sessao.usuario,
+        senha: sessao.senha,
+        presente: {
+          id: dom.presenteId.value || undefined,
+          nome,
+          categoria,
+          descricao: dom.presenteDescricao.value.trim(),
+          imagem: dom.presenteImagem.value.trim(),
+          valorSugerido: Number(dom.presenteValor.value) || 0,
+          linkMercadoPago: dom.presenteLink.value.trim(),
+          ativo: dom.presenteAtivo.checked
+        }
+      });
+
+      if (!resposta.success) {
+        mostrarErro(dom.erroPresente, resposta.message || MENSAGENS_ERRO.TEMPORARIO);
+        return;
+      }
+
+      estado.presentes = resposta.data || [];
+      renderizarTabelaPresentes();
+      renderizarMetricasPresentes();
+      preencherDatalistCategorias();
+      fecharModal(dom.modalPresente);
+      mostrarToast('Presente salvo.', 'sucesso');
+    },
+    aoFalhar: (mensagem) => mostrarErro(dom.erroPresente, mensagem)
+  });
+}
+
+function confirmarExclusaoPresente(presente) {
+  const confirmado = window.confirm(`Excluir o presente "${presente.nome}"? Esta ação não pode ser desfeita.`);
+  if (confirmado) excluirPresenteRemoto(presente.id);
+}
+
+async function excluirPresenteRemoto(id) {
+  mostrarLoader();
+
+  try {
+    const resposta = await chamarBackend('excluirPresente', {
+      usuario: sessao.usuario,
+      senha: sessao.senha,
+      id
+    });
+
+    if (!resposta.success) {
+      mostrarToast(resposta.message || MENSAGENS_ERRO.TEMPORARIO, 'erro');
+      return;
+    }
+
+    estado.presentes = resposta.data || [];
+    renderizarTabelaPresentes();
+    renderizarMetricasPresentes();
+    mostrarToast('Presente excluído.', 'sucesso');
+  } catch (erro) {
+    console.error('[Admin] Falha ao excluir presente:', erro);
+    mostrarToast(mensagemAmigavelParaErro(erro), 'erro');
+  } finally {
+    esconderLoader();
+  }
+}
+
+/* ---------- Categorias: tabela ---------- */
+function renderizarTabelaCategorias() {
+  dom.tabelaCategoriasCorpo.innerHTML = '';
+  dom.tabelaCategoriasVazia.hidden = estado.categorias.length > 0;
+
+  const fragmento = document.createDocumentFragment();
+
+  estado.categorias.forEach((categoria) => {
+    const tr = document.createElement('tr');
+    tr.appendChild(criarCelula(categoria.nome));
+
+    const tdAtivo = document.createElement('td');
+    const badge = document.createElement('span');
+    badge.className = categoria.ativo ? 'badge-ativo' : 'badge-inativo';
+    badge.textContent = categoria.ativo ? 'Ativa' : 'Inativa';
+    tdAtivo.appendChild(badge);
+    tr.appendChild(tdAtivo);
+
+    tr.appendChild(criarCelulaAcoesCategoria(categoria));
+    fragmento.appendChild(tr);
+  });
+
+  dom.tabelaCategoriasCorpo.appendChild(fragmento);
+}
+
+function criarCelulaAcoesCategoria(categoria) {
+  const td = document.createElement('td');
+  const container = document.createElement('div');
+  container.className = 'acoes-tabela';
+
+  const btnEditar = document.createElement('button');
+  btnEditar.type = 'button';
+  btnEditar.className = 'botao-acao-tabela';
+  btnEditar.textContent = 'Editar';
+  btnEditar.addEventListener('click', () => abrirModalCategoria(categoria));
+
+  const btnExcluir = document.createElement('button');
+  btnExcluir.type = 'button';
+  btnExcluir.className = 'botao-acao-tabela acao-excluir';
+  btnExcluir.textContent = 'Excluir';
+  btnExcluir.addEventListener('click', () => confirmarExclusaoCategoria(categoria));
+
+  container.append(btnEditar, btnExcluir);
+  td.appendChild(container);
+  return td;
+}
+
+function preencherDatalistCategorias() {
+  dom.listaNomesCategorias.innerHTML = '';
+  estado.categorias.forEach((categoria) => {
+    const option = document.createElement('option');
+    option.value = categoria.nome;
+    dom.listaNomesCategorias.appendChild(option);
+  });
+}
+
+/* ---------- Categorias: modal (criar/editar) ---------- */
+function abrirModalCategoria(categoria) {
+  dom.formCategoria.reset();
+  limparErro(dom.erroCategoria);
+
+  dom.modalCategoriaTitulo.textContent = categoria ? 'Editar categoria' : 'Adicionar categoria';
+  dom.categoriaId.value = categoria ? categoria.id : '';
+  dom.categoriaNome.value = categoria ? categoria.nome : '';
+  dom.categoriaAtiva.checked = categoria ? categoria.ativo : true;
+
+  abrirModal(dom.modalCategoria);
+  dom.categoriaNome.focus();
+}
+
+async function onSubmitCategoria(evento) {
+  evento.preventDefault();
+  limparErro(dom.erroCategoria);
+
+  const nome = dom.categoriaNome.value.trim();
+  if (!nome) {
+    mostrarErro(dom.erroCategoria, 'Informe o nome da categoria.');
+    return;
+  }
+
+  await executarComFeedback({
+    botao: dom.btnSalvarCategoria,
+    textoCarregando: 'Salvando...',
+    acao: async () => {
+      const resposta = await chamarBackend('salvarCategoria', {
+        usuario: sessao.usuario,
+        senha: sessao.senha,
+        categoria: {
+          id: dom.categoriaId.value || undefined,
+          nome,
+          ativo: dom.categoriaAtiva.checked
+        }
+      });
+
+      if (!resposta.success) {
+        mostrarErro(dom.erroCategoria, resposta.message || MENSAGENS_ERRO.TEMPORARIO);
+        return;
+      }
+
+      estado.categorias = resposta.data || [];
+      renderizarTabelaCategorias();
+      preencherDatalistCategorias();
+      fecharModal(dom.modalCategoria);
+      mostrarToast('Categoria salva.', 'sucesso');
+    },
+    aoFalhar: (mensagem) => mostrarErro(dom.erroCategoria, mensagem)
+  });
+}
+
+function confirmarExclusaoCategoria(categoria) {
+  const confirmado = window.confirm(`Excluir a categoria "${categoria.nome}"? Presentes já cadastrados nessa categoria não serão alterados.`);
+  if (confirmado) excluirCategoriaRemota(categoria.id);
+}
+
+async function excluirCategoriaRemota(id) {
+  mostrarLoader();
+
+  try {
+    const resposta = await chamarBackend('excluirCategoria', {
+      usuario: sessao.usuario,
+      senha: sessao.senha,
+      id
+    });
+
+    if (!resposta.success) {
+      mostrarToast(resposta.message || MENSAGENS_ERRO.TEMPORARIO, 'erro');
+      return;
+    }
+
+    estado.categorias = resposta.data || [];
+    renderizarTabelaCategorias();
+    preencherDatalistCategorias();
+    mostrarToast('Categoria excluída.', 'sucesso');
+  } catch (erro) {
+    console.error('[Admin] Falha ao excluir categoria:', erro);
+    mostrarToast(mensagemAmigavelParaErro(erro), 'erro');
+  } finally {
+    esconderLoader();
+  }
+}
+
+/* ---------- Contribuições: tabela e filtro ---------- */
+function renderizarTabelaContribuicoes() {
+  const filtro = dom.selectFiltroPagamento.value;
+  const contribuicoesFiltradas = filtro === 'todos'
+    ? estado.contribuicoes
+    : estado.contribuicoes.filter((c) => c.pagamento === filtro);
+
+  dom.tabelaContribuicoesCorpo.innerHTML = '';
+  dom.tabelaContribuicoesVazia.hidden = contribuicoesFiltradas.length > 0;
+
+  const fragmento = document.createDocumentFragment();
+
+  contribuicoesFiltradas.forEach((contribuicao) => {
+    const tr = document.createElement('tr');
+
+    tr.appendChild(criarCelula(contribuicao.nome));
+    tr.appendChild(criarCelula(contribuicao.grupoFamiliar || '—', 'celula-mensagem'));
+    tr.appendChild(criarCelula(contribuicao.presente));
+    tr.appendChild(criarCelula(contribuicao.mensagem || '—', 'celula-mensagem'));
+    tr.appendChild(criarCelula(formatarMoeda(contribuicao.valorSugerido)));
+
+    const tdPagamento = document.createElement('td');
+    const badge = document.createElement('span');
+    const classesPagamento = {
+      Pago: 'status-badge status-confirmado',
+      Cancelado: 'status-badge status-ausente',
+      Pendente: 'status-badge status-pendente'
+    };
+    badge.className = classesPagamento[contribuicao.pagamento] || 'status-badge status-pendente';
+    badge.textContent = contribuicao.pagamento;
+    tdPagamento.appendChild(badge);
+    tr.appendChild(tdPagamento);
+
+    tr.appendChild(criarCelula(contribuicao.valorRecebido ? formatarMoeda(contribuicao.valorRecebido) : '—'));
+    tr.appendChild(criarCelula(contribuicao.data ? formatarDataHora(contribuicao.data) : '—'));
+    tr.appendChild(criarCelula(contribuicao.agradecimentoEnviado ? 'Sim' : 'Não'));
+
+    tr.appendChild(criarCelulaAcoesContribuicao(contribuicao));
+
+    fragmento.appendChild(tr);
+  });
+
+  dom.tabelaContribuicoesCorpo.appendChild(fragmento);
+}
+
+function criarCelulaAcoesContribuicao(contribuicao) {
+  const td = document.createElement('td');
+  const btnEditar = document.createElement('button');
+  btnEditar.type = 'button';
+  btnEditar.className = 'botao-acao-tabela';
+  btnEditar.textContent = 'Atualizar';
+  btnEditar.addEventListener('click', () => abrirModalContribuicao(contribuicao));
+  td.appendChild(btnEditar);
+  return td;
+}
+
+/* ---------- Contribuições: modal de pagamento ---------- */
+function abrirModalContribuicao(contribuicao) {
+  dom.formContribuicao.reset();
+
+  dom.modalContribuicaoDescricao.textContent = `${contribuicao.nome} — ${contribuicao.presente}`;
+  dom.contribuicaoId.value = contribuicao.id;
+  dom.contribuicaoPagamento.value = contribuicao.pagamento || 'Pendente';
+  dom.contribuicaoValorRecebido.value = contribuicao.valorRecebido || '';
+  dom.contribuicaoFormaPagamento.value = contribuicao.formaPagamento || '';
+  dom.contribuicaoObservacoes.value = contribuicao.observacoes || '';
+  dom.contribuicaoAgradecimento.checked = Boolean(contribuicao.agradecimentoEnviado);
+
+  abrirModal(dom.modalContribuicao);
+}
+
+async function onSubmitContribuicao(evento) {
+  evento.preventDefault();
+
+  await executarComFeedback({
+    botao: dom.btnSalvarContribuicao,
+    textoCarregando: 'Salvando...',
+    acao: async () => {
+      const resposta = await chamarBackend('atualizarContribuicao', {
+        usuario: sessao.usuario,
+        senha: sessao.senha,
+        contribuicao: {
+          id: dom.contribuicaoId.value,
+          pagamento: dom.contribuicaoPagamento.value,
+          valorRecebido: Number(dom.contribuicaoValorRecebido.value) || 0,
+          formaPagamento: dom.contribuicaoFormaPagamento.value.trim(),
+          observacoes: dom.contribuicaoObservacoes.value.trim(),
+          agradecimentoEnviado: dom.contribuicaoAgradecimento.checked
+        }
+      });
+
+      if (!resposta.success) {
+        mostrarToast(resposta.message || MENSAGENS_ERRO.TEMPORARIO, 'erro');
+        return;
+      }
+
+      estado.contribuicoes = resposta.data || [];
+      renderizarTabelaContribuicoes();
+      renderizarMetricasPresentes();
+      renderizarUltimasContribuicoes();
+      fecharModal(dom.modalContribuicao);
+      mostrarToast('Contribuição atualizada.', 'sucesso');
+    },
+    aoFalhar: (mensagem) => mostrarToast(mensagem, 'erro')
+  });
+}
+
+/* ---------- Utilitário genérico de modal ---------- */
+function abrirModal(elementoOverlay) {
+  elementoOverlay.hidden = false;
+  elementoOverlay.setAttribute('aria-hidden', 'false');
+}
+
+function fecharModal(elementoOverlay) {
+  elementoOverlay.hidden = true;
+  elementoOverlay.setAttribute('aria-hidden', 'true');
 }
 
 /* =========================================================

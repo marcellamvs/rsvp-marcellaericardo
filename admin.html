@@ -74,6 +74,9 @@
     <nav class="admin-abas" aria-label="Seções do painel">
       <button type="button" id="aba-dashboard" class="botao-aba aba-ativa" aria-current="page">Dashboard</button>
       <button type="button" id="aba-configuracoes" class="botao-aba">Configurações do Evento</button>
+      <button type="button" id="aba-presentes" class="botao-aba">Presentes</button>
+      <button type="button" id="aba-categorias" class="botao-aba">Categorias</button>
+      <button type="button" id="aba-contribuicoes" class="botao-aba">Contribuições</button>
     </nav>
 
     <div id="secao-dashboard">
@@ -105,6 +108,31 @@
     </section>
 
     <p class="admin-ultima-atualizacao" id="admin-ultima-atualizacao"></p>
+
+    <section class="admin-metricas admin-metricas-presentes" id="admin-metricas-presentes" aria-label="Resumo da lista de presentes">
+      <div class="metrica-card">
+        <span class="metrica-valor" id="metrica-qtd-presentes">0</span>
+        <span class="metrica-label">Presentes cadastrados</span>
+      </div>
+      <div class="metrica-card">
+        <span class="metrica-valor" id="metrica-qtd-contribuicoes">0</span>
+        <span class="metrica-label">Contribuições</span>
+      </div>
+      <div class="metrica-card">
+        <span class="metrica-valor" id="metrica-valor-sugerido-total">R$ 0</span>
+        <span class="metrica-label">Valor sugerido (total)</span>
+      </div>
+      <div class="metrica-card metrica-sucesso">
+        <span class="metrica-valor" id="metrica-valor-confirmado-total">R$ 0</span>
+        <span class="metrica-label">Valor confirmado (pago)</span>
+      </div>
+    </section>
+
+    <section class="admin-ultimas-contribuicoes" aria-label="Últimas contribuições">
+      <h2 class="titulo-secao-dashboard">Últimas contribuições</h2>
+      <ul class="lista-ultimas-contribuicoes" id="lista-ultimas-contribuicoes"></ul>
+      <p class="admin-tabela-vazia" id="ultimas-contribuicoes-vazia" hidden>Nenhuma contribuição registrada ainda.</p>
+    </section>
 
     <section class="admin-controles" aria-label="Filtros e pesquisa">
       <input
@@ -192,7 +220,189 @@
         </form>
       </section>
     </div>
+
+    <!-- ===================== PRESENTES ===================== -->
+    <div id="secao-presentes" hidden>
+      <section class="admin-secao-topo" aria-label="Gerenciar presentes">
+        <h2 class="titulo-secao-dashboard">Presentes</h2>
+        <button type="button" id="btn-novo-presente" class="botao botao-primario botao-compacto botao-nova-linha">Adicionar presente</button>
+      </section>
+
+      <section class="admin-tabela-wrapper" aria-label="Lista de presentes cadastrados">
+        <table class="admin-tabela">
+          <thead>
+            <tr>
+              <th scope="col">Nome</th>
+              <th scope="col">Categoria</th>
+              <th scope="col">Valor sugerido</th>
+              <th scope="col">Ativo</th>
+              <th scope="col">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-presentes-corpo"></tbody>
+        </table>
+        <p class="admin-tabela-vazia" id="tabela-presentes-vazia" hidden>Nenhum presente cadastrado ainda.</p>
+      </section>
+    </div>
+
+    <!-- ===================== CATEGORIAS ===================== -->
+    <div id="secao-categorias" hidden>
+      <section class="admin-secao-topo" aria-label="Gerenciar categorias">
+        <h2 class="titulo-secao-dashboard">Categorias</h2>
+        <button type="button" id="btn-nova-categoria" class="botao botao-primario botao-compacto botao-nova-linha">Adicionar categoria</button>
+      </section>
+
+      <section class="admin-tabela-wrapper" aria-label="Lista de categorias cadastradas">
+        <table class="admin-tabela">
+          <thead>
+            <tr>
+              <th scope="col">Nome</th>
+              <th scope="col">Ativa</th>
+              <th scope="col">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-categorias-corpo"></tbody>
+        </table>
+        <p class="admin-tabela-vazia" id="tabela-categorias-vazia" hidden>Nenhuma categoria cadastrada ainda.</p>
+      </section>
+    </div>
+
+    <!-- ===================== CONTRIBUIÇÕES ===================== -->
+    <div id="secao-contribuicoes" hidden>
+      <section class="admin-controles admin-controles-contribuicoes" aria-label="Filtro de contribuições">
+        <select id="select-filtro-pagamento" class="campo-input campo-input-admin" aria-label="Filtrar por status de pagamento">
+          <option value="todos">Todos os pagamentos</option>
+          <option value="Pendente">Pendente</option>
+          <option value="Pago">Pago</option>
+          <option value="Cancelado">Cancelado</option>
+        </select>
+      </section>
+
+      <section class="admin-tabela-wrapper" aria-label="Lista de contribuições">
+        <table class="admin-tabela">
+          <thead>
+            <tr>
+              <th scope="col">Convidado</th>
+              <th scope="col">Grupo familiar</th>
+              <th scope="col">Presente</th>
+              <th scope="col">Mensagem</th>
+              <th scope="col">Valor sugerido</th>
+              <th scope="col">Pagamento</th>
+              <th scope="col">Valor recebido</th>
+              <th scope="col">Data</th>
+              <th scope="col">Agradecimento</th>
+              <th scope="col">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-contribuicoes-corpo"></tbody>
+        </table>
+        <p class="admin-tabela-vazia" id="tabela-contribuicoes-vazia" hidden>Nenhuma contribuição registrada ainda.</p>
+      </section>
+    </div>
   </main>
+
+  <!-- ===================== MODAL: PRESENTE ===================== -->
+  <div class="modal-overlay" id="modal-presente" hidden aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-presente-titulo">
+      <button type="button" class="modal-fechar" data-fechar-modal="modal-presente" aria-label="Fechar">&times;</button>
+      <h2 class="modal-titulo" id="modal-presente-titulo">Adicionar presente</h2>
+
+      <form id="form-presente">
+        <input type="hidden" id="presente-id">
+
+        <label for="presente-nome" class="campo-label">Nome</label>
+        <input type="text" id="presente-nome" class="campo-input campo-input-admin" required>
+
+        <label for="presente-categoria" class="campo-label">Categoria</label>
+        <input type="text" id="presente-categoria" class="campo-input campo-input-admin" list="lista-nomes-categorias" required>
+        <datalist id="lista-nomes-categorias"></datalist>
+
+        <label for="presente-descricao" class="campo-label">Descrição</label>
+        <textarea id="presente-descricao" class="campo-textarea campo-input-admin" rows="3"></textarea>
+
+        <label for="presente-imagem" class="campo-label">Imagem (URL)</label>
+        <input type="url" id="presente-imagem" class="campo-input campo-input-admin" placeholder="https://...">
+
+        <label for="presente-valor" class="campo-label">Valor sugerido (R$)</label>
+        <input type="number" id="presente-valor" class="campo-input campo-input-admin" min="0" step="0.01">
+
+        <label for="presente-link" class="campo-label">Link Mercado Pago</label>
+        <input type="url" id="presente-link" class="campo-input campo-input-admin" placeholder="https://mpago.la/...">
+
+        <label class="campo-switch">
+          <input type="checkbox" id="presente-ativo" checked>
+          <span class="switch-visual"></span>
+          <span>Presente ativo (visível no site)</span>
+        </label>
+
+        <p id="erro-presente" class="mensagem-erro" role="alert" aria-live="assertive"></p>
+
+        <button type="submit" id="btn-salvar-presente" class="botao botao-primario">Salvar presente</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: CATEGORIA ===================== -->
+  <div class="modal-overlay" id="modal-categoria" hidden aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-categoria-titulo">
+      <button type="button" class="modal-fechar" data-fechar-modal="modal-categoria" aria-label="Fechar">&times;</button>
+      <h2 class="modal-titulo" id="modal-categoria-titulo">Adicionar categoria</h2>
+
+      <form id="form-categoria">
+        <input type="hidden" id="categoria-id">
+
+        <label for="categoria-nome" class="campo-label">Nome</label>
+        <input type="text" id="categoria-nome" class="campo-input campo-input-admin" required>
+
+        <label class="campo-switch">
+          <input type="checkbox" id="categoria-ativa" checked>
+          <span class="switch-visual"></span>
+          <span>Categoria ativa (visível no site)</span>
+        </label>
+
+        <p id="erro-categoria" class="mensagem-erro" role="alert" aria-live="assertive"></p>
+
+        <button type="submit" id="btn-salvar-categoria" class="botao botao-primario">Salvar categoria</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: PAGAMENTO DA CONTRIBUIÇÃO ===================== -->
+  <div class="modal-overlay" id="modal-contribuicao" hidden aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-contribuicao-titulo">
+      <button type="button" class="modal-fechar" data-fechar-modal="modal-contribuicao" aria-label="Fechar">&times;</button>
+      <h2 class="modal-titulo" id="modal-contribuicao-titulo">Atualizar pagamento</h2>
+      <p class="modal-descricao" id="modal-contribuicao-descricao"></p>
+
+      <form id="form-contribuicao">
+        <input type="hidden" id="contribuicao-id">
+
+        <label for="contribuicao-pagamento" class="campo-label">Status do pagamento</label>
+        <select id="contribuicao-pagamento" class="campo-input campo-input-admin">
+          <option value="Pendente">Pendente</option>
+          <option value="Pago">Pago</option>
+          <option value="Cancelado">Cancelado</option>
+        </select>
+
+        <label for="contribuicao-valor-recebido" class="campo-label">Valor recebido (R$)</label>
+        <input type="number" id="contribuicao-valor-recebido" class="campo-input campo-input-admin" min="0" step="0.01">
+
+        <label for="contribuicao-forma-pagamento" class="campo-label">Forma de pagamento</label>
+        <input type="text" id="contribuicao-forma-pagamento" class="campo-input campo-input-admin" placeholder="Pix, Mercado Pago, dinheiro...">
+
+        <label for="contribuicao-observacoes" class="campo-label">Observações</label>
+        <textarea id="contribuicao-observacoes" class="campo-textarea campo-input-admin" rows="3"></textarea>
+
+        <label class="campo-switch">
+          <input type="checkbox" id="contribuicao-agradecimento">
+          <span class="switch-visual"></span>
+          <span>Agradecimento enviado</span>
+        </label>
+
+        <button type="submit" id="btn-salvar-contribuicao" class="botao botao-primario">Salvar</button>
+      </form>
+    </div>
+  </div>
 
   <script src="admin.js"></script>
 </body>

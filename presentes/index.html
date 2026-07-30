@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lista de Presentes | Marcella &amp; Ricardo</title>
+  <meta name="description" content="Lista de presentes do jantar de noivado de Marcella e Ricardo — 19 de setembro de 2026.">
+  <meta name="theme-color" content="#610018">
+
+  <link rel="icon" type="image/png" href="../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../assets/favicon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Jost:wght@300;400;500&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"></noscript>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="loading" class="loading-overlay" aria-hidden="true">
+    <div class="spinner" role="status" aria-label="Carregando"></div>
+  </div>
+
+  <div id="toast-container" aria-live="polite"></div>
+
+  <main class="app-presentes">
+
+    <header class="cabecalho-presentes">
+      <h1 class="titulo-nomes">Lista de Presentes</h1>
+      <p class="subtitulo">Marcella &amp; Ricardo</p>
+      <p class="texto-explicativo">
+        Sua presença já é o nosso maior presente. Mas, se quiser nos ajudar a
+        começar essa nova fase, preparamos esta lista com carinho — sinta-se
+        à vontade para escolher o quanto e o que fizer sentido para você.
+        Os presentes são simbólicos e podem ser escolhidos por mais de uma pessoa.
+      </p>
+    </header>
+
+    <nav class="filtro-categorias" id="filtro-categorias" aria-label="Filtrar por categoria">
+      <button type="button" class="chip-categoria chip-ativa" data-categoria="todos">Todos</button>
+    </nav>
+
+    <section class="grade-presentes" id="grade-presentes" aria-label="Presentes disponíveis"></section>
+
+    <p class="mensagem-vazia" id="mensagem-vazia" hidden>Nenhum presente encontrado nesta categoria.</p>
+    <p class="mensagem-vazia" id="mensagem-erro-carregamento" hidden>Não foi possível carregar a lista de presentes agora. Atualize a página em instantes.</p>
+
+  </main>
+
+  <!-- ===================== MODAL "PRESENTEAR" ===================== -->
+  <div class="modal-overlay" id="modal-presentear" hidden aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-descricao">
+      <button type="button" class="modal-fechar" id="btn-fechar-modal" aria-label="Fechar">&times;</button>
+
+      <h2 class="modal-titulo" id="modal-titulo">Presentear</h2>
+      <p class="modal-descricao" id="modal-descricao">Presenteando: <strong id="modal-nome-presente">—</strong></p>
+
+      <form id="form-presentear" novalidate>
+        <label for="input-busca-convidado" class="campo-label">Seu nome</label>
+        <div class="campo-autocomplete">
+          <input
+            type="text"
+            id="input-busca-convidado"
+            class="campo-input campo-input-presentes"
+            placeholder="Digite seu nome..."
+            autocomplete="off"
+            aria-describedby="erro-convidado"
+            required
+          >
+          <ul class="lista-sugestoes" id="lista-sugestoes" hidden role="listbox"></ul>
+        </div>
+        <p id="erro-convidado" class="mensagem-erro" role="alert" aria-live="assertive"></p>
+
+        <label for="input-mensagem-presente" class="campo-label">Mensagem para os noivos (opcional)</label>
+        <textarea
+          id="input-mensagem-presente"
+          class="campo-textarea campo-input-presentes"
+          rows="3"
+          maxlength="500"
+          placeholder="Escreva uma mensagem carinhosa..."
+        ></textarea>
+
+        <button type="submit" id="btn-continuar-presente" class="botao botao-primario" disabled>Continuar</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

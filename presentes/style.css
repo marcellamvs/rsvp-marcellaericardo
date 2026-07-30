@@ -1,0 +1,480 @@
+/* =========================================================
+   DESIGN TOKENS
+   Mesmos valores de style.css (raiz do projeto) — a identidade
+   visual do RSVP é reaplicada aqui integralmente.
+========================================================= */
+:root {
+  /* Cores */
+  --color-creme: #FFF5EC;
+  --color-vinho: #610018;
+  --color-vinho-escuro: #45000f;
+  --color-azul: #B9C9E3;
+  --color-branco: #FFFFFF;
+  --color-borda: #ECE3D8;
+  --color-texto: #3A2E28;
+  --color-texto-suave: #7A6D63;
+  --color-erro: #B3261E;
+  --color-sucesso: #2E6B4F;
+
+  /* Tipografia */
+  --fonte-titulo: 'Cinzel', serif;
+  --fonte-texto: 'Jost', sans-serif;
+
+  /* Espaçamentos */
+  --espaco-xs: 6px;
+  --espaco-sm: 12px;
+  --espaco-md: 20px;
+  --espaco-lg: 32px;
+  --espaco-xl: 48px;
+
+  /* Bordas e raios */
+  --raio-sm: 8px;
+  --raio-md: 16px;
+  --raio-lg: 24px;
+  --raio-pill: 999px;
+
+  /* Sombra */
+  --sombra-card: 0 8px 30px rgba(97, 0, 24, 0.08);
+  --sombra-botao: 0 4px 14px rgba(97, 0, 24, 0.18);
+
+  /* Animação */
+  --duracao-transicao: 320ms;
+  --easing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Layout */
+  --largura-max-presentes: 960px;
+}
+
+/* =========================================================
+   RESET
+========================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--color-creme);
+  color: var(--color-texto);
+  font-family: var(--fonte-texto);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+h1, h2, h3 { font-family: var(--fonte-titulo); margin: 0; }
+p { margin: 0; }
+button { font-family: inherit; }
+textarea { font-family: inherit; }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-vinho);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================
+   LAYOUT GERAL
+========================================================= */
+.app-presentes {
+  max-width: var(--largura-max-presentes);
+  margin: 0 auto;
+  padding: var(--espaco-lg) max(var(--espaco-md), env(safe-area-inset-right))
+           max(var(--espaco-xl), env(safe-area-inset-bottom))
+           max(var(--espaco-md), env(safe-area-inset-left));
+}
+
+/* =========================================================
+   CABEÇALHO
+========================================================= */
+.cabecalho-presentes {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto var(--espaco-xl);
+}
+
+.titulo-nomes {
+  font-size: 1.9rem;
+  color: var(--color-vinho);
+  letter-spacing: 0.5px;
+}
+
+.subtitulo {
+  margin-top: var(--espaco-xs);
+  font-family: var(--fonte-texto);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 0.75rem;
+  color: var(--color-texto-suave);
+}
+
+.texto-explicativo {
+  margin-top: var(--espaco-md);
+  font-size: 0.95rem;
+  color: var(--color-texto);
+}
+
+/* =========================================================
+   FILTRO DE CATEGORIAS
+========================================================= */
+.filtro-categorias {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--espaco-xs);
+  margin-bottom: var(--espaco-lg);
+}
+
+.chip-categoria {
+  padding: 8px 18px;
+  border-radius: var(--raio-pill);
+  border: 1px solid var(--color-borda);
+  background: var(--color-branco);
+  color: var(--color-texto);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background var(--duracao-transicao) var(--easing),
+              color var(--duracao-transicao) var(--easing),
+              border-color var(--duracao-transicao) var(--easing);
+}
+
+.chip-categoria:hover { border-color: var(--color-vinho); }
+
+.chip-categoria.chip-ativa {
+  background: var(--color-vinho);
+  border-color: var(--color-vinho);
+  color: var(--color-branco);
+}
+
+/* =========================================================
+   GRADE DE PRESENTES
+========================================================= */
+.grade-presentes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--espaco-md);
+}
+
+.card-presente {
+  background: var(--color-branco);
+  border: 1px solid var(--color-borda);
+  border-radius: var(--raio-lg);
+  box-shadow: var(--sombra-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: fade-in var(--duracao-transicao) var(--easing);
+}
+
+.imagem-presente-wrapper {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--color-creme);
+  overflow: hidden;
+}
+
+.imagem-presente {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.corpo-presente {
+  padding: var(--espaco-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-xs);
+  flex: 1;
+}
+
+.categoria-presente {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-texto-suave);
+}
+
+.nome-presente {
+  font-family: var(--fonte-titulo);
+  font-size: 1.05rem;
+  color: var(--color-vinho);
+}
+
+.descricao-presente {
+  font-size: 0.85rem;
+  color: var(--color-texto);
+  flex: 1;
+}
+
+.valor-presente {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-texto);
+}
+
+.botao-presentear {
+  margin-top: var(--espaco-sm);
+}
+
+.mensagem-vazia {
+  text-align: center;
+  color: var(--color-texto-suave);
+  font-size: 0.9rem;
+  padding: var(--espaco-xl) 0;
+}
+
+/* =========================================================
+   BOTÕES (mesmo padrão do site de RSVP)
+========================================================= */
+.botao {
+  display: inline-block;
+  width: 100%;
+  padding: 13px var(--espaco-md);
+  border-radius: var(--raio-pill);
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--duracao-transicao) var(--easing),
+              opacity var(--duracao-transicao) var(--easing),
+              box-shadow var(--duracao-transicao) var(--easing);
+}
+
+.botao:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.botao-primario {
+  background: var(--color-vinho);
+  color: var(--color-branco);
+  box-shadow: var(--sombra-botao);
+}
+
+.botao-primario:hover:not(:disabled) { background: var(--color-vinho-escuro); }
+.botao-primario:active:not(:disabled) { transform: scale(0.98); }
+
+/* =========================================================
+   FORMULÁRIO / CAMPOS
+========================================================= */
+.campo-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: var(--espaco-xs);
+  margin-top: var(--espaco-md);
+  color: var(--color-texto);
+}
+
+.campo-input-presentes {
+  width: 100%;
+  padding: 14px var(--espaco-md);
+  border: 1px solid var(--color-borda);
+  border-radius: var(--raio-md);
+  background: var(--color-creme);
+  color: var(--color-texto);
+  font-size: 1rem;
+  font-family: var(--fonte-texto);
+  transition: border-color var(--duracao-transicao) var(--easing);
+}
+
+.campo-input-presentes:focus {
+  border-color: var(--color-vinho);
+  box-shadow: 0 0 0 3px rgba(97, 0, 24, 0.1);
+  outline: none;
+}
+
+textarea.campo-input-presentes { resize: vertical; }
+
+.mensagem-erro {
+  min-height: 18px;
+  color: var(--color-erro);
+  font-size: 0.8rem;
+  margin-top: var(--espaco-xs);
+}
+
+/* =========================================================
+   AUTOCOMPLETE DE CONVIDADOS
+========================================================= */
+.campo-autocomplete { position: relative; }
+
+.lista-sugestoes {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--color-branco);
+  border: 1px solid var(--color-borda);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-card);
+  list-style: none;
+  margin: 0;
+  padding: var(--espaco-xs) 0;
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 20;
+}
+
+.sugestao-item {
+  padding: var(--espaco-sm) var(--espaco-md);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.sugestao-item:hover,
+.sugestao-item.sugestao-destacada {
+  background: var(--color-creme);
+}
+
+.sugestao-nome { font-weight: 500; color: var(--color-texto); }
+.sugestao-grupo { display: block; font-size: 0.75rem; color: var(--color-texto-suave); }
+
+.sugestao-vazia {
+  padding: var(--espaco-sm) var(--espaco-md);
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+}
+
+/* =========================================================
+   MODAL "PRESENTEAR"
+========================================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(58, 46, 40, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espaco-md);
+  z-index: 150;
+}
+
+.modal-overlay[hidden] { display: none; }
+
+.modal-card {
+  background: var(--color-branco);
+  border-radius: var(--raio-lg);
+  box-shadow: var(--sombra-card);
+  padding: var(--espaco-lg) var(--espaco-md);
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: fade-in var(--duracao-transicao) var(--easing);
+}
+
+.modal-fechar {
+  position: absolute;
+  top: var(--espaco-sm);
+  right: var(--espaco-sm);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-creme);
+  color: var(--color-texto);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.modal-fechar:hover { background: var(--color-borda); }
+
+.modal-titulo {
+  font-size: 1.3rem;
+  color: var(--color-vinho);
+  padding-right: var(--espaco-lg);
+}
+
+.modal-descricao {
+  margin-top: var(--espaco-xs);
+  font-size: 0.9rem;
+  color: var(--color-texto-suave);
+}
+
+/* =========================================================
+   LOADING OVERLAY / TOAST (mesmo padrão do site de RSVP)
+========================================================= */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 245, 236, 0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.loading-overlay.visivel { display: flex; }
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-borda);
+  border-top-color: var(--color-vinho);
+  border-radius: 50%;
+  animation: girar 700ms linear infinite;
+}
+
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
+#toast-container {
+  position: fixed;
+  bottom: var(--espaco-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 250;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-xs);
+  width: calc(100% - 2 * var(--espaco-md));
+  max-width: 420px;
+  align-items: center;
+}
+
+.toast {
+  background: var(--color-vinho);
+  color: var(--color-branco);
+  padding: 12px var(--espaco-md);
+  border-radius: var(--raio-md);
+  font-size: 0.85rem;
+  box-shadow: var(--sombra-botao);
+  animation: fade-in var(--duracao-transicao) var(--easing);
+  text-align: center;
+}
+
+.toast-erro { background: var(--color-erro); }
+.toast-sucesso { background: var(--color-sucesso); }
+
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+@media (min-width: 481px) {
+  .app-presentes { padding-top: var(--espaco-xl); }
+}
